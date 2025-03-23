@@ -53,5 +53,5 @@ def merge_images(folder_A, folder_B, output_folder):
 
 if __name__ == "__main__":
     merge_images(
-        "~/sr3/dataset/WHU_512", "~/sr3/dataset/opt_512", "~/cg_pix/datasets/sar/train"
+        "/home/flyingbucket/sr3/dataset/WHU_512", "/home/flyingbucket/sr3/dataset/opt_512", "/home/flyingbucket/cg_pix/datasets/sar/train"
     )
