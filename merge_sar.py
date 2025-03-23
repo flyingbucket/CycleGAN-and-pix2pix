@@ -4,7 +4,7 @@ from PIL import Image
 from tqdm import tqdm
 
 
-def merge(file, files_B, output_folder):
+def merge(folder_A, folder_B, file, files_B, output_folder):
     if file not in files_B:
         print("文件名不匹配 跳过")
 
@@ -42,7 +42,9 @@ def merge_images(folder_A, folder_B, output_folder):
     task = []
     with ProcessPoolExecutor() as extc:
         for file in files_A:
-            task.append(extc.submit(merge, file, files_B, output_folder))
+            task.append(
+                extc.submit(merge, folder_A, folder_B, file, files_B, output_folder)
+            )
             # merge(file, files_B, output_folder)
         for t in tqdm(task):
             t.result()
