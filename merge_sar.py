@@ -1,4 +1,5 @@
 import os
+from concurrent.futures import ProcessPoolExecutor
 from PIL import Image
 from tqdm import tqdm
 
@@ -10,10 +11,10 @@ def merge_images(folder_A, folder_B, output_folder):
     files_A = sorted(os.listdir(folder_A))
     files_B = sorted(os.listdir(folder_B))
 
-    for file in tqdm((files_A), total=len(files_A)):
+    # for file in tqdm((files_A), total=len(files_A)):
+    def merge(file, files_B, output_folder):
         if file not in files_B:
-            print(f"文件名不匹配 跳过")
-            continue
+            print("文件名不匹配 跳过")
 
         path_A = os.path.join(folder_A, file)
         path_B = os.path.join(folder_B, file)
@@ -23,7 +24,6 @@ def merge_images(folder_A, folder_B, output_folder):
             and path_B.endswith((".png", ".jpg", ".jpeg", ".tif"))
         ):
             print(f"跳过非图片文件: {file}, {file}")
-            continue
 
         # 打开图片
         img_A = Image.open(path_A)
@@ -37,6 +37,13 @@ def merge_images(folder_A, folder_B, output_folder):
         # 保存结果
         merged.save(os.path.join(output_folder, file))
 
+    task = []
+    with ProcessPoolExecutor() as extc:
+        for file in files_A:
+            task.append(extc.submit(merge, file, files_B, output_folder))
+            # merge(file, files_B, output_folder)
+        for t in tqdm(task):
+            t.result()
     print(f"拼接完成！拼接结果保存在: {output_folder}")
 
 
